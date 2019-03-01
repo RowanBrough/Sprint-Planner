@@ -1,0 +1,104 @@
+.gantt-container::-webkit-scrollbar {
+  width: 1em;
+}
+.gantt-container::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+.gantt-container::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+.gantt-container {
+  overflow: hidden;
+  overflow-x: visible;
+  padding: 10px 0;
+}
+
+.gantt-header, 
+.gantt-header .gantt-header-months,
+.gantt-header .gantt-header-days,
+.gantt-header .gantt-header-days-min {
+  display: block;
+}
+
+.gantt-header .gantt-header-months .gantt-header-month,
+.gantt-header .gantt-header-days .gantt-header-day,
+.gantt-header .gantt-header-days-min .gantt-header-day-min {
+  display: block;
+  float: left;
+}
+
+.gantt-header .gantt-header-months .gantt-header-month {
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+  padding-left: 15px;
+  border-left: 1px solid #bec5cc;
+}
+
+.gantt-header .gantt-header-days .gantt-header-day,
+.gantt-header .gantt-header-days-min .gantt-header-day-min {
+  background-color: #34495e;
+  color: #fff;
+  text-align: center;
+}
+.gantt-header .gantt-header-days-min .gantt-header-day-min {
+  color: #6e7a87;
+}
+
+.gantt-header .gantt-header-days .gantt-header-day-new,
+.gantt-header .gantt-header-days-min .gantt-header-day-min-new {
+  border-left: 1px solid #bec5cc;
+}
+
+.gantt-items {
+  display: block;
+  
+}
+
+.gantt-item {
+  position: relative;
+}
+
+.custom-draggable-resizable-item {
+  background-color: #fff;
+  border: 1px solid #c8c8c8;
+  border-left: 3px solid #009ccc;
+  cursor: all-scroll;
+  white-space: nowrap;
+  top:0!important;
+}
+
+
+
+
+
+
+.task-item-avatar {
+  min-width: 20px;
+  max-width: 30px;
+  float: left;
+}
+.task-item-avatar img {
+  width: 100%;
+  height: auto;
+}
+.task-item-content {
+  overflow: hidden;
+  padding-left: 5px;
+}
+.task-item-assigned {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: .3s cubic-bezier(.25,.8,.5,1);
+  width: 100%;
+}
+.task-item-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: .3s cubic-bezier(.25,.8,.5,1);
+  width: 100%;
+}

@@ -1,0 +1,79 @@
+{
+  "manifestVersion": 1,
+  "id": "sprint-planner",
+  "publisher": "RowanBrough",
+  "version": "1.0.114",
+  "name": "Sprint Planner",
+  "description": "",
+  "public": false,
+  "categories": [
+    "Azure Repos"
+  ],
+  "scopes": [
+    "vso.work",
+    "vso.work_write"
+  ],
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "sprint-planner",
+      "type": "ms.vss-web.hub",
+      "targets": [
+        "ms.vss-work-web.work-hub-group"
+      ],
+      "properties": {
+        "name": "Sprint Planner",
+        "uri": "sprint-planner.html",
+        "registeredObjectId": "sprintPlannerObject"
+      }
+    },
+    {
+      "id": "add-task-form",
+      "type": "ms.vss-web.control",
+      "description": "Add a task within a dialog",
+      "targets": [],
+      "properties": {
+        "uri": "add-task-form.html"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "sprint-planner.html",
+      "addressable": true
+    },
+    {
+      "path": "add-task-form.html",
+      "addressable": true
+    },
+    {
+      "path": "src/js/npm-static-files",
+      "addressable": true,
+      "packagePath": "npm-js"
+    },
+    {
+      "path": "src/css/npm-static-files",
+      "addressable": true,
+      "packagePath": "npm-css"
+    },
+    {
+      "path": "src/js/components",
+      "addressable": true,
+      "packagePath": "components"
+    },
+    {
+      "path": "src/css",
+      "addressable": true,
+      "packagePath": "css"
+    },
+    {
+      "path": "src/js",
+      "addressable": true,
+      "packagePath": "js"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+.header { 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  font-weight: 200;
+  font-size: 18px;
+  margin-top: 0;
+}
+.header.sub-header {
+    font-size: 12px;
+    color: #767676;
+}
+
+
+
+
+
+
+
+

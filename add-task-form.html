@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="npm-css/vuetify.min.css" rel="stylesheet">
+        <link href="npm-css/vue-multiselect.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="app">
+            <v-app>
+                <v-content>
+
+                    <v-container>
+                        <v-layout justify-start column>
+                            
+                            <v-flex xs12>
+                                <label class="typo__label">
+                                    Assign To
+                                </label>
+                                
+                                <multiselect placeholder="Select a Team Member"
+                                label="displayName" track-by="displayName" :options="teamMembers" 
+                                v-model="selectedMember"
+                                :option-height="35" :show-labels="false"
+                                @select="memberSelected">
+                                    <template slot="singleLabel" slot-scope="props">
+                                        <v-avatar
+                                        :size="20">
+                                        <img class="option__image" :src="props.option.avatarUrl" :alt="props.option.displayName">
+                                        </v-avatar>
+                                        <span class="option__title">
+                                            {{ 
+                                                props.option.displayName 
+                                            }}
+                                        </span>
+                                    </template>
+
+                                    <template slot="option" slot-scope="props">
+                                        <v-avatar
+                                        :size="20">
+                                        <img class="option__image" :src="props.option.avatarUrl" :alt="props.option.displayName">
+                                        </v-avatar>
+                                        <span class="option__title">
+                                            {{ 
+                                                props.option.displayName 
+                                            }}
+                                        </span>
+                                    </template>
+                                </multiselect>
+
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <div v-if="activity.length > 0">
+                                    <label 
+                                    class="typo__label">
+                                        Activity
+                                    </label>
+                                    <multiselect 
+                                    v-model="selectedActivity"
+                                    :options="activity" 
+                                    label="name"
+                                    :searchable="false"
+                                    :close-on-select="true"
+                                    placeholder="Select an Activity"
+                                    @select="activitySelected"
+                                    @remove="activityRemoved">
+                                    </multiselect>
+                                </div>
+                                <div v-else>
+                                    <v-alert
+                                    :value="true"
+                                    color="warning">
+                                        No activities to display.
+                                        <span v-if="hasMember">
+                                            Please setup activities for
+                                            {{ 
+                                                selectedMember.displayName 
+                                            }}.
+                                        </span>
+                                    </v-alert>
+                                </div>
+                            </v-flex>
+
+                            <v-flex xs12>
+                                <label class="typo__label">
+                                    Task Name
+                                </label>
+                                <v-text-field
+                                v-model="taskName"
+                                :counter="50"
+                                label="Task name"
+                                required single-line>
+                                </v-text-field>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+
+                </v-content>
+            </v-app>
+        </div>
+        
+        <script src="npm-js/VSS.SDK.min.js"></script>
+
+        <script src="npm-js/vue.js"></script>
+        <script src="npm-js/vuetify.min.js"></script>
+        <script src="npm-js/vue-multiselect.min.js"></script>
+
+        <script src="js/add-task.js"></script>
+    </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
+    
+    <link href="npm-css/vuetify.min.css" rel="stylesheet">
+    <link href="npm-css/VueDraggableResizable.css" rel="stylesheet">
+    <link href="npm-css/vue-multiselect.min.css" rel="stylesheet">
+
+    <link href='css/main.css' rel="stylesheet">
+    <link href='css/gantt.css' rel="stylesheet">
+    <link href='css/summary-accordion.css' rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+
+    <div id="app">
+        <v-app>
+            <v-content>
+    
+                <v-container fluid>
+
+                    <v-layout justify-space-between row>
+                        <v-flex xs12 md6>
+                            <label class="typo__label">
+                                Filter By
+                            </label>
+
+                            <multiselect 
+                            v-model="selectedMembers" 
+                            :options="teamMembers"
+                            :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select a Team Member" label="displayName" track-by="displayName" :preselect-first="true"
+                            :option-height="35">
+                                <template slot="option" slot-scope="props">
+                                    <v-avatar
+                                    :size="30">
+                                    <img class="option__image" :src="props.option.avatarUrl" :alt="props.option.displayName">
+                                    </v-avatar>
+                                    <span class="option__title">
+                                        {{ 
+                                            props.option.displayName 
+                                        }}
+                                    </span>
+                                </template>
+                            </multiselect>
+                        </v-flex>
+                        <v-flex xs12 md6 order-md2>
+                            <h1 align-center class="header text-xs-center">
+                            {{ teamName }}
+                            {{ currentIteration.name }}
+                            </h1>
+                            <h1 align-center class="header sub-header text-xs-center">
+                                {{ formatDate(currentIteration.startDate, 'MMMM Do') }} - {{ formatDate(currentIteration.finishDate, 'MMMM Do') }}
+                            </h1>
+                            <h1 align-center class="header sub-header text-xs-center">
+                                {{ remainingWorkDays }}
+                                {{ (remainingWorkDays > 1 ? ' days remaining' : ' day remaining') }}
+                            </h1>
+                        </v-flex>
+                    </v-layout>
+
+                    <v-layout row nowrap>
+                        <v-flex xs12>
+                            
+                                <div ref="ganttContainer">
+
+                                </div>
+                            
+                        </v-flex>
+                    </v-layout>
+                </v-container>
+
+                <v-snackbar
+                v-model="snackbar.show"
+                :color="snackbar.type"
+                multi-line
+                :timeout="snackbar.timeout">
+                {{ snackbar.text }}
+                <i class="material-icons"
+                @click="snackbar.show = false">
+                close
+                </i>
+                </v-snackbar>
+
+            </v-content>
+        </v-app>
+    </div>
+    <script src="npm-js/VSS.SDK.min.js"></script>
+
+    <script src="npm-js/vue.js"></script>
+    <script src="npm-js/vuetify.min.js"></script>
+    <script src="npm-js/lodash.min.js"></script>
+    <script src="npm-js/moment.js"></script>
+    <script src="npm-js/vue-multiselect.min.js"></script>
+    <script src="npm-js/VueDraggableResizable.umd.js"></script>
+
+    <script src="js/extentions.js"></script>
+    <script src="components/npm-components.js"></script>
+    <script src="components/gantt.js"></script>
+    <script src="components/summary-accordion.js"></script>
+    <script src="components/select-team.js"></script>
+    <script type="text/javascript"> 
+        VSS.init( 
+        { 
+            explicitNotifyLoaded: true, 
+            setupModuleLoader: true, 
+            usePlatformScripts: true, 
+            usePlatformStyles: true 
+        });
+        VSS.ready(() => {
+            require(["js/main"]);
+        });
+    </script>
+</body>
+</html>

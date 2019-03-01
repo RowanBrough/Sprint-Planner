@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
+    
+    <link href="src/css/npm-static-files/vuetify.min.css" rel="stylesheet">
+    <link href="src/css/npm-static-files/VueDraggableResizable.css" rel="stylesheet">
+    <link href="src/css/npm-static-files/vue-multiselect.min.css" rel="stylesheet">
+
+    <link href='src/css/main.css' rel="stylesheet">
+    <link href='src/css/gantt.css' rel="stylesheet">
+    <link href='src/css/summary-accordion.css' rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+      <v-app>
+        <v-content>
+
+          <v-container fluid>
+            <v-layout row nowrap>
+              <v-flex xs12>
+
+                <h1 align-center class="header text-xs-center">
+                  {{ teamName }}
+                  {{ currentIteration.name }}
+                </h1>
+                <h1 align-center class="header sub-header text-xs-center">
+                    {{ formatDate(startDate, 'MMMM Do') }} - {{ formatDate(endDate, 'MMMM Do') }}
+                </h1>
+                <h1 align-center class="header sub-header text-xs-center">
+                    {{ remainingWorkDays }}
+                    {{ (remainingWorkDays > 1 ? ' days remaining' : ' day remaining') }}
+                </h1>
+
+              </v-flex>
+            </v-layout>
+
+            <v-layout row nowrap>
+              <v-flex xs12 md10>
+                
+                <gantt  :header-width="250"
+                        :cell-width="80"
+                        :cell-height="50"
+                        :start-date="startDate"
+                        :end-Date="endDate"
+                        :work-items="orderedWorkItems">
+                </gantt>
+                  
+              </v-flex>
+
+              <v-flex xs12 md2>
+                
+                <label class="typo__label">
+                  Filter by Team Members
+                </label>
+                <select-team placeholder="Select Team Members" trackBy="displayName" :is-multiselect="true">
+                </select-team>
+
+              </v-flex>
+
+            </v-layout>
+          </v-container>
+        </v-content>
+      </v-app>
+    </div>
+    
+    <script src="src/js/npm-static-files/vue.js"></script>
+    <script src="src/js/npm-static-files/vuetify.min.js"></script>
+    <script src="src/js/npm-static-files/lodash.min.js"></script>
+    <script src="src/js/npm-static-files/moment.js"></script>
+    <script src="src/js/npm-static-files/vue-multiselect.min.js"></script>
+    <script src="src/js/npm-static-files/VueDraggableResizable.umd.js"></script>
+
+    <script src="src/js/extentions.js"></script>
+    <script src="src/js/components/npm-components.js"></script>
+    <script src="src/js/components/gantt.js"></script>
+    <script src="src/js/components/summary-accordion.js"></script>
+    <script src="src/js/components/add-task-form.js"></script>
+    <script src="src/js/components/select-team.js"></script>
+
+    <script src="src/js/main01.js"></script>
+    
+</body>
+</html>
