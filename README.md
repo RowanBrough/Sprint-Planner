@@ -35,6 +35,16 @@ Visualise the planning of a sprint. Using tasks linked to sprint stories in a ga
 6) collapse/expand all feature
 ```
 
+## Built With
+
+* [Vue.js](https://vuejs.org/v2/guide/index.html) - The JavaScript framework used.
+* [vuetify](https://vuetifyjs.com/en/) - UI toolkit and development framework used.
+* [Material.io - icons](https://material.io/tools/icons/?style=baseline) - Used for icons.
+* [Lodash](https://lodash.com/) - a JavaScript utility library which makes it much easier to work with arrays, numbers, objects, strings, etc.
+* [Moment](https://momentjs.com/) - Parse, validate, manipulate, and display dates and times in JavaScript.
+* [vue-draggable-resizable](https://github.com/mauricius/vue-draggable-resizable) - Vue2 Component for draggable and resizable elements.
+* [Vue-multiselect](https://vue-multiselect.js.org/) - Vue supported Dropdowns with Searchable Single and multiple select options.
+
 
 
 
