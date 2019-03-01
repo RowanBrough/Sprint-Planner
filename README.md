@@ -2,6 +2,8 @@
 
 Visualise the planning of a sprint. Using tasks linked to sprint stories in a gantt like approach.
 
+![alt text](https://raw.githubusercontent.com/RowanBrough/rowanbrough/master/Capture.PNG)
+
 ## Features:
 
 ```
