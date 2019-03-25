@@ -30,7 +30,14 @@
                             <multiselect 
                             v-model="selectedMembers" 
                             :options="teamMembers"
-                            :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Select a Team Member" label="displayName" track-by="displayName" :preselect-first="true"
+                            :multiple="true"
+                            :close-on-select="false"
+                            :clear-on-select="false"
+                            :preserve-search="true"
+                            placeholder="Select a Team Member"
+                            label="displayName"
+                            track-by="displayName"
+                            :preselect-first="true"
                             :option-height="35">
                                 <template slot="option" slot-scope="props">
                                     <v-avatar

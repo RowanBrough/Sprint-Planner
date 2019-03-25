@@ -29,12 +29,13 @@ Visualise the planning of a sprint. Using tasks linked to sprint stories in a ga
 ## Upgrades:
 
 ```
-1) day capacity summary
-2) add story to sprint - search and move / create new
+1) day capacity summary - highlight days where over/under capacity - with custom colors
+2) add/remove stories in sprint - search and move / create new
 3) color coding different tasks for easy reference
 4) account and visualise team days off + individual days off
 5) change the sprint - allow sprint date range editing
 6) collapse/expand all feature
+7) highlight todays date - calculate capacity from todays date
 ```
 
 ## Built With

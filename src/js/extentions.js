@@ -3,6 +3,7 @@ function PostData (url, bearerToken) {
   this.bearerToken = bearerToken;
   this.callType = "iteration";
   this.callback;
+  this.callbackParameters;
   this.callbackFail = handleFailedPost;
   this.debug = false;
 }
@@ -10,12 +11,12 @@ function PostData (url, bearerToken) {
 function UrlParameters() {
   this.bearerToken;
   this.global = {
-    organization:'',
-    organizationId:'',
-    project:'',
-    projectId:'',
-    team:'',
-    teamId:''
+    organization: '',
+    organizationId: '',
+    project: '',
+    projectId: '',
+    team: '',
+    teamId: ''
   };
   this.additional = {};
   this.getUrl = replaceUrlParameters;
@@ -24,16 +25,16 @@ function UrlParameters() {
 function replaceUrlParameters(url) {
   // replace the global parameters
   return url.regexReplace(this.global)
-  .regexReplace(this.additional);
+      .regexReplace(this.additional);
 }
 
 function httpGetData(_post) {
-  if(_post.debug) {
+  if (_post.debug) {
     console.log('Running httpGetData:', _post);
   }
-  
-  if(_post.url) {
-    if(_post.debug) {
+
+  if (_post.url) {
+    if (_post.debug) {
       console.log('Authorization:', _post.bearerToken);
     }
     increaseRequestCount(_post.callType, false);
@@ -44,33 +45,37 @@ function httpGetData(_post) {
         'Authorization': _post.bearerToken
       })
     })
-    .then((dataWrappedByPromise) => {
+        .then((dataWrappedByPromise) => {
 
-      dataWrappedByPromise.json().then(data => {
-        if(typeof _post.callback === "function") {
-          _post.callback(data);
-        }
-        else {
-          console.warn("To access this data please pass through a callback. The data your requested is: ", data);
-        }
-        increaseRequestCount(_post.callType, true);
-      });
-    })
-    .catch((error) => {
-      increaseRequestCount(_post.callType, true);
-      if(error)  {
-        if(typeof _post.callbackFail === "function") {
-          _post.callbackFail(error);
-        }
-        else {
-          console.error("An error occured when fetching data. You can handle this error by passing a callback: ", error);
-        }
-      }
-    });
-  }
-  else {
+          dataWrappedByPromise.json().then(data => {
+            if (typeof _post.callback === "function") {
+
+              if(_post.callbackParameters) {
+                _post.callback(data, _post.callbackParameters);
+              }
+              else {
+                _post.callback(data);
+              }
+
+            } else {
+              console.warn("To access this data please pass through a callback. The data your requested is: ", data);
+            }
+            increaseRequestCount(_post.callType, true);
+          });
+        })
+        .catch((error) => {
+          increaseRequestCount(_post.callType, true);
+          if (error) {
+            if (typeof _post.callbackFail === "function") {
+              _post.callbackFail(error);
+            } else {
+              console.error("An error occured when fetching data. You can handle this error by passing a callback: ", error);
+            }
+          }
+        });
+  } else {
     var postData = new PostData('example url',
-    'unique bearer token required for authentication');
+        'unique bearer token required for authentication');
     postData.callback = 'function (optional)';
     postData.callbackFail = 'function (optional)';
     postData.debug = 'true|false (default false)';
@@ -79,34 +84,38 @@ function httpGetData(_post) {
 }
 
 function increaseRequestCount(type, isComplete) {
-  switch(type) {
+  switch (type) {
     case "team":
-    if(isComplete) {
-      app.teamDetailRequestsCompleted++;
-    }
-    else {
-      app.teamDetailRequests++;
-    }
-    break;
+      if (isComplete) {
+        app.teamDetailRequestsCompleted++;
+      } else {
+        app.teamDetailRequests++;
+      }
+      break;
 
     case "iteration":
-    if(isComplete) {
-      app.iterationRequestsCompleted++;
-    }
-    else {
-      app.iterationRequests++;
-    }
-    break;
+      if (isComplete) {
+        app.iterationRequestsCompleted++;
+      } else {
+        app.iterationRequests++;
+      }
+      break;
 
-    case "itemType":
-    if(isComplete) {
-      app.itemTypeRequestsCompleted++;
-    }
-    else {
-      app.itemTypeRequests++;
-    }
-    break;
+    case "item_type":
+      if (isComplete) {
+        app.itemTypeRequestsCompleted++;
+      } else {
+        app.itemTypeRequests++;
+      }
+      break;
 
+    case "item_state":
+      if (isComplete) {
+        app.itemStateRequestsCompleted++;
+      } else {
+        app.itemStateRequests++;
+      }
+      break;
   }
 }
 
@@ -160,7 +169,13 @@ function WorkItemType (name, color, icon, states) {
   this.name = name;
   this.color = color;
   this.icon = icon;
-  this.states = states;
+  this.states = [];
+}
+
+function WorkItemState (name, color, category) {
+  this.name = name;
+  this.color = color;
+  this.category = category;
 }
 
 
@@ -168,9 +183,9 @@ Object.defineProperty(String.prototype, "regexReplace", {
   value: function regexReplace(obj) {
     var url = this;
     for (var p in obj) {
-      if(obj.hasOwnProperty(p)) {
+      if (obj.hasOwnProperty(p)) {
         var replace = '{' + p + '}';
-        var re = new RegExp(replace,"g");
+        var re = new RegExp(replace, "g");
         url = url.replace(re, obj[p]);
       }
     }

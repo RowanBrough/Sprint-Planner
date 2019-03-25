@@ -24,6 +24,9 @@ var app = new Vue({
     itemTypeRequests: 0,
     itemTypeRequestsCompleted: 0,
 
+    itemStateRequests: 0,
+    itemStateRequestsCompleted: 0,
+
     teamName: "",
     teamMembers: [],
     selectedMembers: [],
@@ -36,11 +39,12 @@ var app = new Vue({
   },
   watch: {
     allRequest: function () {
-      if(this.allRequest != 0 && this.allRequest == 3) {
+      if(this.allRequest != 0 && this.allRequest == 4) {
         this.allRequest = 0;
         assignTeamMemberData();
         assignWorkItemStates();
-        assignWorkItemMember();
+        assignWorkItemTasks();
+        // assignWorkItemMember();
         this.loadComponents();
         this.loading = false;
         handleError('All requests completed', 'success');
@@ -57,7 +61,7 @@ var app = new Vue({
 
     iterationRequestsCompleted: function () {
       if(this.iterationRequests != 0 && this.iterationRequests == this.iterationRequestsCompleted) {
-        getWorkItemTypes();
+        getWorkItemTypeData();
         this.iterationRequests = 0;
         this.iterationRequestsCompleted = 0;
         this.allRequest++;
@@ -71,12 +75,21 @@ var app = new Vue({
         this.allRequest++;
       }
     },
+
+    itemStateRequestsCompleted: function () {
+      if(this.itemStateRequests != 0 && this.itemStateRequests == this.itemStateRequestsCompleted) {
+        this.itemStateRequests = 0;
+        this.itemStateRequestsCompleted = 0;
+        this.allRequest++;
+      }
+    },
+
     selectedMembers: function(newVal, oldVal) {
       ganttControl.workItems = this.filterWorkItems();
     }
   },
   computed: {
-    
+
   },
   methods: {
     formatDate: function(date, format) {
@@ -132,7 +145,16 @@ var app = new Vue({
         }
       }
       return _.orderBy(this.workItems, ['priority', 'id']);
-    }
+    },
+
+    getTypeData: function(typeName) {
+      var type = _.find(this.workItemTypes, _.matchesProperty('name', typeName));
+      return type;
+    },
+    getStateData: function(type, stateName) {
+      var state = _.find(type.states, _.matchesProperty('name', stateName));
+      return state;
+    },
   }
 });
 
@@ -298,63 +320,63 @@ function getWorkItemRelations(response) {
   }
 }
 
-var listWorkItemTypesCalls = [];
-var listWorkItemTypes = [];
+// var listWorkItemTypesCalls = [];
+// var listWorkItemTypes = [];
 function getWorkItemDetails(response) {
   if(response) {
     var workItem = createWorkItem(response);
     app.workItems.push(workItem);
-
-    listWorkItemTypesCalls.push(response._links.workItemType.href);
+    //
+    // listWorkItemTypesCalls.push(response._links.workItemType.href);
   }
 }
 function createWorkItem(data) {
   var name = null;
-    var priority = null;
-    var state = null;
-    var type = null;
-    var assignedTo = null;
-    var startDate = null;
-    var endDate = null;
-    var activity = null;
-    var capacity = defaultCapacity;
-    var isHalfDayStart = false;
-    var isHalfDayEnd = false;
+  var priority = null;
+  var state = null;
+  var type = null;
+  var assignedTo = null;
+  var startDate = null;
+  var endDate = null;
+  var activity = null;
+  var capacity = defaultCapacity;
+  var isHalfDayStart = false;
+  var isHalfDayEnd = false;
 
-    if(data.fields["System.Title"]) {
-      name = data.fields["System.Title"];
-    }
-    if(data.fields["Microsoft.VSTS.Common.Priority"]) {
-      priority = data.fields["Microsoft.VSTS.Common.Priority"];
-    }
-    if(data.fields["System.State"]) {
-      state = data.fields["System.State"];
-    }
-    if(data.fields["System.WorkItemType"]) {
-      type = data.fields["System.WorkItemType"];
-    }
-    if(data.fields["System.AssignedTo"]) {
-      assignedTo = data.fields["System.AssignedTo"].id;
-    }
-    if(data.fields["Custom.StartDate"]) {
-      startDate = data.fields["Custom.StartDate"];
-    }
-    if(data.fields["Custom.EndDate"]) {
-      endDate = data.fields["Custom.EndDate"];
-    }
-    if(data.fields["Custom.Activity"]) {
-      activity = data.fields["Custom.Activity"];
-    }
-    if(data.fields["Custom.Capacity"]) {
-      capacity = data.fields["Custom.Capacity"];
-    }
-    if(data.fields["Custom.HalfDayStart"]) {
-      isHalfDayStart = data.fields["Custom.HalfDayStart"];
-    }
-    if(data.fields["Custom.HalfDayEnd"]) {
-      isHalfDayEnd = data.fields["Custom.HalfDayEnd"];
-    }
-    var workItem = new WorkItem(
+  if (data.fields["System.Title"]) {
+    name = data.fields["System.Title"];
+  }
+  if (data.fields["Microsoft.VSTS.Common.Priority"]) {
+    priority = data.fields["Microsoft.VSTS.Common.Priority"];
+  }
+  if (data.fields["System.State"]) {
+    state = data.fields["System.State"];
+  }
+  if (data.fields["System.WorkItemType"]) {
+    type = data.fields["System.WorkItemType"];
+  }
+  if (data.fields["System.AssignedTo"]) {
+    assignedTo = data.fields["System.AssignedTo"].id;
+  }
+  if (data.fields["Custom.StartDate"]) {
+    startDate = data.fields["Custom.StartDate"];
+  }
+  if (data.fields["Custom.EndDate"]) {
+    endDate = data.fields["Custom.EndDate"];
+  }
+  if (data.fields["Custom.Activity"]) {
+    activity = data.fields["Custom.Activity"];
+  }
+  if (data.fields["Custom.Capacity"]) {
+    capacity = data.fields["Custom.Capacity"];
+  }
+  if (data.fields["Custom.HalfDayStart"]) {
+    isHalfDayStart = data.fields["Custom.HalfDayStart"];
+  }
+  if (data.fields["Custom.HalfDayEnd"]) {
+    isHalfDayEnd = data.fields["Custom.HalfDayEnd"];
+  }
+  var workItem = new WorkItem(
       data.id,
       data.rev,
       name,
@@ -369,66 +391,66 @@ function createWorkItem(data) {
       capacity,
       isHalfDayStart,
       isHalfDayEnd
-    );
-    return workItem;
-}
-function getWorkItemTypes() {
-  var uniqueCalls = _.uniq(listWorkItemTypesCalls);
-  uniqueCalls.forEach(url => {
-    var workItemTypesCall = new PostData(url, params.bearerToken);
-        workItemTypesCall.callback = getWorkItemTypesResponce;
-        workItemTypesCall.callType = "itemType";
-        httpGetData(workItemTypesCall);
-  });
-}
-function getWorkItemTypesResponce(response) {
-  var type = new WorkItemType(
-    response.name,
-    response.color,
-    response.icon,
-    response.states
   );
-  app.workItemTypes.push(type);
+  return workItem;
 }
+// function getWorkItemTypes() {
+//   var uniqueCalls = _.uniq(listWorkItemTypesCalls);
+//   uniqueCalls.forEach(url => {
+//     var workItemTypesCall = new PostData(url, params.bearerToken);
+//         workItemTypesCall.callback = getWorkItemTypesResponce;
+//         workItemTypesCall.callType = "item_type";
+//         httpGetData(workItemTypesCall);
+//   });
+// }
+// function getWorkItemTypesResponce(response) {
+//   var type = new WorkItemType(
+//     response.name,
+//     response.color,
+//     response.icon,
+//     response.states
+//   );
+//   app.workItemTypes.push(type);
+// }
+//
+// function assignWorkItemStates() {
+//   app.workItems.forEach(item => {
+//     var info = getWorkItemState(item.type, item.state);
+//     item.stateColor = info.stateColor;
+//     item.typeColor = info.typeColor;
+//     item.typeIcon = info.typeIcon;
+//   });
+// }
+// function getWorkItemState(typeName, stateName) {
+//   var type = _.find(app.workItemTypes, _.matchesProperty('name', typeName));
+//
+//   var stateColor = "b2b2b2";
+//   var typeColor = "f2cb1d";
+//   var typeIcon = "";
+//
+//   if(type && type.states) {
+//     var state = _.find(type.states, _.matchesProperty('name', stateName));
+//     stateColor = state.color;
+//     typeColor = type.color;
+//     typeIcon = type.icon;
+//   }
+//   return {
+//     stateColor: stateColor,
+//     typeColor: type.color,
+//     typeIcon: type.icon
+//   }
+// }
 
-function assignWorkItemStates() {
-  app.workItems.forEach(item => {
-    var info = getWorkItemState(item.type, item.state);
-    item.stateColor = info.stateColor;
-    item.typeColor = info.typeColor;
-    item.typeIcon = info.typeIcon;
-  });
-}
-function getWorkItemState(typeName, stateName) {
-  var type = _.find(app.workItemTypes, _.matchesProperty('name', typeName));
-  
-  var stateColor = "b2b2b2";
-  var typeColor = "f2cb1d";
-  var typeIcon = "";
-
-  if(type && type.states) {
-    var state = _.find(type.states, _.matchesProperty('name', stateName));
-    stateColor = state.color;
-    typeColor = type.color;
-    typeIcon = type.icon; 
-  }
-  return {
-    stateColor: stateColor,
-    typeColor: type.color,
-    typeIcon: type.icon
-  }
-}
-
-function assignWorkItemMember() {
-  app.workItems.forEach(item => {
-    if(item.assignedId) {
-      var member = _.find(app.teamMembers, _.matchesProperty('id', item.assignedId));
-      item.assignedName = member.displayName;
-      item.assignedAvatar = member.avatarUrl;
-    }
-  });
-  assignWorkItemTasks();
-}
+// function assignWorkItemMember() {
+//   app.workItems.forEach(item => {
+//     if(item.assignedId) {
+//       var member = _.find(app.teamMembers, _.matchesProperty('id', item.assignedId));
+//       item.assignedName = member.displayName;
+//       item.assignedAvatar = member.avatarUrl;
+//     }
+//   });
+//   assignWorkItemTasks();
+// }
 
 function assignWorkItemTasks() {
   linkedWorkItems.forEach(links => {
@@ -890,4 +912,64 @@ function calculateTaskEffort(left, width, taskId, capacity) {
   effort = Math.ceil(effort);
 
   MoveTask(taskId, startDate, endDate, isHalfStart, isHalfEnd, effort);
+}
+
+
+
+
+
+
+function getWorkItemTypeData() {
+  var getUrl = params.getUrl("https://dev.azure.com/{organization}/{project}/_apis/wit/workitemtypes?api-version=5.0");
+  var httpCall = new PostData(getUrl, params.bearerToken);
+  httpCall.callback = workItemTypeDataResponce;
+  httpCall.callType = "item_type";
+  httpGetData(httpCall);
+}
+function workItemTypeDataResponce(response) {
+  app.workItemTypes = [];
+  if(response && response.count > 0) {
+    response.value.forEach(item => {
+      var type = new WorkItemType(
+          item.name,
+          item.color,
+          item.icon.url
+      );
+      app.workItemTypes.push(type);
+    });
+    addStatesToWorkItemTypes();
+  }
+}
+
+function addStatesToWorkItemTypes() {
+  var uniqueCalls = _.uniq(app.workItemTypes);
+  uniqueCalls.forEach(type => {
+    getWorkItemStateData(type.name);
+  });
+}
+
+function getWorkItemStateData(workItemTypeName) {
+  params.additional = {
+    type: workItemTypeName.toLowerCase()
+  };
+  var getUrl = params.getUrl("https://dev.azure.com/{organization}/{project}/_apis/wit/workitemtypes/{type}/states?api-version=5.0-preview.1");
+  var httpCall = new PostData(getUrl, params.bearerToken);
+  httpCall.callback = workItemStateDataResponce;
+  httpCall.callbackParameters = workItemTypeName;
+  httpCall.callType = "item_state";
+  httpGetData(httpCall);
+}
+function workItemStateDataResponce(response, workItemTypeName) {
+  if(response && response.count > 0) {
+    var type = _.find(app.workItemTypes, _.matchesProperty('name', workItemTypeName));
+    type.states = [];
+    response.value.forEach(item => {
+      var type = new WorkItemState(
+          item.name,
+          item.color,
+          item.category
+      );
+      type.states.push(type);
+    });
+  }
 }
